@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import WebKit
 
 class ViewController: UIViewController {
     // MARK: - Properties
@@ -15,13 +16,10 @@ class ViewController: UIViewController {
     
     // MARK: - View
     
-    private lazy var helloWorldLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        
-        label.text = "Hello World!"
-        
-        return label
+    private lazy var webView: WKWebView = {
+        let webView = WKWebView()
+        webView.translatesAutoresizingMaskIntoConstraints = false
+        return webView
     }()
     
     // MARK: - ViewController lifecycle
@@ -33,7 +31,12 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.addSubview(helloWorldLabel)
+        let url = URL(string: "https://google.co.jp")
+        let request = NSURLRequest(url: url!)
+        
+        webView.load(request as URLRequest)
+        
+        view.addSubview(webView)
     }
     
     override func updateViewConstraints() {
@@ -41,8 +44,10 @@ class ViewController: UIViewController {
         if (!didSetupConstraints) {
             
             NSLayoutConstraint.activate([
-                helloWorldLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-                helloWorldLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+                webView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 0.0),
+                webView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0.0),
+                webView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: 0.0),
+                webView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0.0)
             ])
             
             didSetupConstraints = true
@@ -50,6 +55,4 @@ class ViewController: UIViewController {
         
         super.updateViewConstraints()
     }
-
 }
-
