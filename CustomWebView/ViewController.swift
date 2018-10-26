@@ -33,10 +33,10 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         
         let url = URL(string: "https://google.co.jp")
-        let request = NSURLRequest(url: url!)
+        let request = URLRequest(url: url!)
         
-        webView.load(request as URLRequest)
-        
+        webView.load(request)
+
         view.addSubview(webView)
     }
     
