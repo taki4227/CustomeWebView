@@ -19,6 +19,7 @@ class ViewController: UIViewController {
     private lazy var webView: WKWebView = {
         let webView = WKWebView()
         webView.translatesAutoresizingMaskIntoConstraints = false
+        webView.navigationDelegate = self
         return webView
     }()
     
@@ -54,5 +55,16 @@ class ViewController: UIViewController {
         }
         
         super.updateViewConstraints()
+    }
+}
+
+// MARK: - UITextFieldDelegate
+
+extension ViewController: WKNavigationDelegate {
+    /// 認証に応答する必要があるときに呼ばれる
+    func webView(_ webView: WKWebView, didReceive challenge: URLAuthenticationChallenge,
+                 completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
+        let credential = URLCredential(user: "", password: "", persistence: URLCredential.Persistence.forSession)
+        completionHandler(.useCredential, credential)
     }
 }
