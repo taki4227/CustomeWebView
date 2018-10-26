@@ -9,12 +9,47 @@
 import UIKit
 
 class ViewController: UIViewController {
+    // MARK: - Properties
+    
+    private var didSetupConstraints = false
+    
+    // MARK: - View
+    
+    private lazy var helloWorldLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        
+        label.text = "Hello World!"
+        
+        return label
+    }()
+    
+    // MARK: - ViewController lifecycle
+    
+    override func loadView() {
+        view = BaseView()
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        
+        view.addSubview(helloWorldLabel)
     }
-
+    
+    override func updateViewConstraints() {
+        
+        if (!didSetupConstraints) {
+            
+            NSLayoutConstraint.activate([
+                helloWorldLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+                helloWorldLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+            ])
+            
+            didSetupConstraints = true
+        }
+        
+        super.updateViewConstraints()
+    }
 
 }
 
