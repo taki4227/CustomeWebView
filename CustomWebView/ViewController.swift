@@ -64,7 +64,62 @@ extension ViewController: WKNavigationDelegate {
     /// 認証に応答する必要があるときに呼ばれる
     func webView(_ webView: WKWebView, didReceive challenge: URLAuthenticationChallenge,
                  completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
-        let credential = URLCredential(user: "", password: "", persistence: URLCredential.Persistence.forSession)
-        completionHandler(.useCredential, credential)
+//        let credential = URLCredential(user: "", password: "", persistence: URLCredential.Persistence.forSession)
+//        completionHandler(.useCredential, credential)
+        
+        guard let host = webView.url?.host else {
+            completionHandler(.cancelAuthenticationChallenge, nil)
+            return
+        }
+        
+        let alert = UIAlertController(title: host + "にログイン", message: "ユーザ名とパスワードを入力してください。", preferredStyle: .alert)
+        
+        // ユーザ名のテキストフィールドを追加
+        alert.addTextField(configurationHandler: {(textField: UITextField!) -> Void in
+            textField.placeholder = "ユーザ名"
+            textField.tag = 1
+        })
+        
+        // パスワードのテキストフィールドを追加
+        alert.addTextField(configurationHandler: {(textField: UITextField!) -> Void in
+            textField.placeholder = "パスワード"
+            textField.isSecureTextEntry = true
+            textField.tag = 2
+        })
+        
+        // ログインボタンの設定
+        let okAction = UIAlertAction(title: "ログイン", style: .default, handler: {
+            (action:UIAlertAction!) -> Void in
+            
+            var user = ""
+            var password = ""
+            
+            if let textFields = alert.textFields {
+                for textField in textFields {
+                    if textField.tag == 1 {
+                        user = textField.text ?? ""
+                    } else if textField.tag == 2 {
+                        password = textField.text ?? ""
+                    }
+                }
+            }
+            
+            print(user)
+            print(password)
+            
+            let credential = URLCredential(user: user, password: password, persistence: URLCredential.Persistence.forSession)
+            completionHandler(.useCredential, credential)
+        })
+        alert.addAction(okAction)
+        
+        // キャンセルボタンの設定
+        let cancelAction = UIAlertAction(title: "キャンセル", style: .cancel, handler: {
+            (action:UIAlertAction!) -> Void in
+            completionHandler(.cancelAuthenticationChallenge, nil)
+        })
+        alert.addAction(cancelAction)
+        
+        // アラートを画面に表示
+        present(alert, animated: true, completion: nil)
     }
 }
