@@ -58,7 +58,7 @@ class ViewController: UIViewController {
     }
 }
 
-// MARK: - UITextFieldDelegate
+// MARK: - WKNavigationDelegate
 
 extension ViewController: WKNavigationDelegate {
     /// 認証に応答する必要があるときに呼ばれる
