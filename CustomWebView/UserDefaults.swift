@@ -11,6 +11,7 @@ import UIKit
 protocol UserDefaultsKey {
     var bundleIdentifier: String { get }
     var keyName: String { get }
+    var defaultValue: Any { get }
 }
 
 extension UserDefaultsKey {
@@ -27,6 +28,15 @@ enum AppConfig1: String, UserDefaultsKey, CaseIterable {
         let className = String(describing: type(of: self))
         return "\(bundleIdentifier).\(className).\(rawValue)"
     }
+    
+    var defaultValue: Any {
+        switch self {
+        case .userName:
+            return "userName1"
+        case .tel:
+            return "tel1"
+        }
+    }
 }
 
 enum AppConfig2: String, UserDefaultsKey, CaseIterable {
@@ -36,11 +46,24 @@ enum AppConfig2: String, UserDefaultsKey, CaseIterable {
         let className = String(describing: type(of: self))
         return "\(bundleIdentifier).\(className).\(rawValue)"
     }
+    
+    var defaultValue: Any {
+        switch self {
+        case .userName:
+            return "userName2"
+        }
+    }
 }
 
 extension UserDefaults {
     func register(key: UserDefaultsKey, value: Any) {
         register(defaults: [key.keyName: value])
+    }
+    
+    func registerDefalut<T: UserDefaultsKey & CaseIterable>(config: T.Type) {
+        config.allCases.forEach { key in
+            register(key: key, value: key.defaultValue)
+        }
     }
     
     func present(key: UserDefaultsKey) -> Bool {
@@ -49,10 +72,6 @@ extension UserDefaults {
     
     func blank(key: UserDefaultsKey) -> Bool {
         return !present(key: key)
-    }
-    
-    func get<T: Any>(key: UserDefaultsKey, defaultValue: T) -> T {
-        return (object(forKey: key.keyName) as? T) ?? defaultValue
     }
     
     func get<T: Any>(key: UserDefaultsKey) -> T? {
@@ -68,14 +87,14 @@ extension UserDefaults {
     }
     
     func removeAll<T: UserDefaultsKey & CaseIterable>(config: T.Type) {
-        T.allCases.forEach { key in
+        config.allCases.forEach { key in
             remove(key: key)
         }
     }
     
     func printAll<T: UserDefaultsKey & CaseIterable>(config: T.Type) {
         T.allCases.forEach { key in
-            let value = get(key: key, defaultValue: "nil")
+            let value = get(key: key) ?? "nil"
             print("\(key): \(value)")
         }
     }
