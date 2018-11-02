@@ -38,6 +38,54 @@ class ViewController: UIViewController {
         webView.load(request)
 
         view.addSubview(webView)
+        
+        print(UserDefaults.standard.present(key: AppConfig1.userName))
+        print(UserDefaults.standard.blank(key: AppConfig1.userName))
+        print(UserDefaults.standard.present(key: AppConfig1.tel))
+        
+        print("----------------")
+        
+        UserDefaults.standard.register(key: AppConfig1.userName, value: "test1")
+        print(UserDefaults.standard.present(key: AppConfig1.userName))
+        print(UserDefaults.standard.blank(key: AppConfig1.userName))
+        print(UserDefaults.standard.present(key: AppConfig1.tel))
+        UserDefaults.standard.printAll(config: AppConfig1.self)
+        
+        print("----------------")
+        
+        UserDefaults.standard.set(key: AppConfig1.userName, value: "test3")
+        UserDefaults.standard.printAll(config: AppConfig1.self)
+        UserDefaults.standard.printAll(config: AppConfig2.self)
+        
+        print("----------------")
+        
+        UserDefaults.standard.set(key: AppConfig2.userName, value: "test4")
+        UserDefaults.standard.printAll(config: AppConfig1.self)
+        UserDefaults.standard.printAll(config: AppConfig2.self)
+        
+        print("----------------")
+        
+        print(UserDefaults.standard.get(key: AppConfig1.tel)!)
+        
+        print("----------------")
+        
+        UserDefaults.standard.remove(key: AppConfig1.userName)
+        UserDefaults.standard.printAll(config: AppConfig1.self)
+        UserDefaults.standard.printAll(config: AppConfig2.self)
+        
+        print("----------------")
+        
+        UserDefaults.standard.removeAll(config: AppConfig2.self)
+        UserDefaults.standard.printAll(config: AppConfig1.self)
+        UserDefaults.standard.printAll(config: AppConfig2.self)
+        
+        print("----------------")
+        
+        UserDefaults.standard.set(key: AppConfig1.userName, value: "test4")
+        UserDefaults.standard.set(key: AppConfig1.tel, value: "tel4")
+        UserDefaults.standard.printAll(config: AppConfig1.self)
+        UserDefaults.standard.removeAll(config: AppConfig1.self)
+        UserDefaults.standard.printAll(config: AppConfig1.self)
     }
     
     override func updateViewConstraints() {

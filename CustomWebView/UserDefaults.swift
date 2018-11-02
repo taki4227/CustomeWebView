@@ -9,10 +9,8 @@
 import UIKit
 
 protocol UserDefaultsKey {
-//    associatedtype ValueType: Any
     var bundleIdentifier: String { get }
     var keyName: String { get }
-//    var defaultValue: ValueType { get }
 }
 
 extension UserDefaultsKey {
@@ -21,20 +19,23 @@ extension UserDefaultsKey {
     }
 }
 
-enum AppConfigKey: String, UserDefaultsKey, CaseIterable {
+enum AppConfig1: String, UserDefaultsKey, CaseIterable {
+    case userName
+    case tel
+    
+    var keyName: String {
+        let className = String(describing: type(of: self))
+        return "\(bundleIdentifier).\(className).\(rawValue)"
+    }
+}
+
+enum AppConfig2: String, UserDefaultsKey, CaseIterable {
     case userName
     
     var keyName: String {
         let className = String(describing: type(of: self))
         return "\(bundleIdentifier).\(className).\(rawValue)"
     }
-    
-//    var defaultValue: Any {
-//        switch self {
-//        case .userName:
-//            return "test1"
-//        }
-//    }
 }
 
 extension UserDefaults {
@@ -50,9 +51,9 @@ extension UserDefaults {
         return !present(key: key)
     }
     
-//    func get<T: Any>(key: UserDefaultsKey, defaultValue: T) -> T {
-//        return (object(forKey: key.keyName) as? T) ?? defaultValue
-//    }
+    func get<T: Any>(key: UserDefaultsKey, defaultValue: T) -> T {
+        return (object(forKey: key.keyName) as? T) ?? defaultValue
+    }
     
     func get<T: Any>(key: UserDefaultsKey) -> T? {
         return object(forKey: key.keyName) as? T
@@ -66,13 +67,13 @@ extension UserDefaults {
         removeObject(forKey: key.keyName)
     }
     
-    func removeAll<T: UserDefaultsKey & CaseIterable>(config: T) {
+    func removeAll<T: UserDefaultsKey & CaseIterable>(config: T.Type) {
         T.allCases.forEach { key in
-            removeObject(forKey: key.keyName)
+            remove(key: key)
         }
     }
     
-    func printAll<T: UserDefaultsKey & CaseIterable>(config: T) {
+    func printAll<T: UserDefaultsKey & CaseIterable>(config: T.Type) {
         T.allCases.forEach { key in
             let value = get(key: key, defaultValue: "nil")
             print("\(key): \(value)")
