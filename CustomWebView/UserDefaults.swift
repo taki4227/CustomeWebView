@@ -6,7 +6,7 @@
 //  Copyright © 2018年 taki. All rights reserved.
 //
 
-import UIKit
+import Foundation
 
 protocol UserDefaultsKey {
     var bundleIdentifier: String { get }
